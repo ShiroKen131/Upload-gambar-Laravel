@@ -1,3 +1,4 @@
+<!-- resources/views/gambar/index.blade.php -->
 @extends('layouts.app')
 
 @section('content')
@@ -28,8 +29,12 @@
                                     <div class="card-body">
                                         <p class="card-text">{{ $gambar->keterangan ?? 'Tidak ada keterangan' }}</p>
                                         <div class="d-flex justify-content-between">
-                                            <a href="{{ route('gambar.show', $gambar->id_gambar) }}" 
-                                               class="btn btn-info btn-sm">Lihat</a>
+                                            <div>
+                                                <a href="{{ route('gambar.show', $gambar->id_gambar) }}" 
+                                                   class="btn btn-info btn-sm">Lihat</a>
+                                                <a href="{{ route('gambar.edit', $gambar->id_gambar) }}" 
+                                                   class="btn btn-warning btn-sm">Edit</a>
+                                            </div>
                                             <form action="{{ route('gambar.destroy', $gambar->id_gambar) }}" 
                                                   method="POST">
                                                 @csrf
@@ -39,7 +44,7 @@
                                                         onclick="return confirm('Yakin ingin menghapus?')">
                                                     Hapus
                                                 </button>
-                                       </form>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

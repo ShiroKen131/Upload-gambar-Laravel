@@ -65,4 +65,47 @@ class GambarController extends Controller
         return redirect()->route('gambar.index')
             ->with('success', 'Gambar berhasil dihapus.');
     }
+
+    public function edit($id)
+    {
+        $gambar = Gambar::findOrFail($id);
+        return view('gambar.edit', compact('gambar'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $gambar = Gambar::findOrFail($id);
+        
+        $request->validate([
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'keterangan' => 'nullable|string'
+        ]);
+
+        if ($request->hasFile('gambar')) {
+            // Delete old image
+            if (Storage::disk('public')->exists('uploads/' . $gambar->file_name)) {
+                Storage::disk('public')->delete('uploads/' . $gambar->file_name);
+            }
+
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            // Store the new file
+            $path = $request->file('gambar')->storeAs(
+                'uploads',
+                $filename,
+                'public'
+            );
+
+            $gambar->file_name = $filename;
+        }
+
+        $gambar->keterangan = $request->keterangan;
+        $gambar->save();
+
+        return redirect()->route('gambar.index')
+            ->with('success', 'Gambar berhasil diupdate.');
+    }
 }
+
+
